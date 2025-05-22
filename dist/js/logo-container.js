@@ -148,15 +148,27 @@ class InfiniteScroller {
     normalizeTransform() {
         const setWidth = this.singleSetWidth;
 
-        // Keep transform within reasonable bounds by jumping to equivalent positions
-        // We maintain the illusion of infinite scroll by jumping between identical sets
+        // Only normalize during automatic animation to prevent jumps during manual control
+        if (this.isManualControl) {
+            // During manual control, allow wider bounds to prevent sudden jumps
+            // Only clamp to extreme limits to prevent going completely off-screen
+            const maxBound = setWidth;
+            const minBound = -setWidth * this.totalSets;
 
-        if (this.currentTransform <= -setWidth * (this.totalSets - 2)) {
-            // Moving too far left/right, jump back to equivalent position
-            this.currentTransform += setWidth;
-        } else if (this.currentTransform >= 0) {
-            // Moving too far right/left, jump forward to equivalent position
-            this.currentTransform -= setWidth;
+            if (this.currentTransform > maxBound) {
+                this.currentTransform = maxBound;
+            } else if (this.currentTransform < minBound) {
+                this.currentTransform = minBound;
+            }
+        } else {
+            // During automatic animation, use seamless wrapping
+            if (this.currentTransform <= -setWidth * (this.totalSets - 2)) {
+                // Moving too far left/right, jump back to equivalent position
+                this.currentTransform += setWidth;
+            } else if (this.currentTransform >= 0) {
+                // Moving too far right/left, jump forward to equivalent position
+                this.currentTransform -= setWidth;
+            }
         }
     }
 
@@ -278,8 +290,25 @@ class InfiniteScroller {
     exitManualMode() {
         clearTimeout(this.manualTimeout);
         this.manualTimeout = setTimeout(() => {
+            // Before resuming automatic mode, normalize position for seamless continuation
+            this.normalizeTransformForResume();
             this.isManualControl = false;
         }, 1000);
+    }
+
+    normalizeTransformForResume() {
+        // When transitioning back to automatic mode, smoothly normalize position
+        const setWidth = this.singleSetWidth;
+
+        // Find the equivalent position within the safe range for automatic animation
+        while (this.currentTransform <= -setWidth * (this.totalSets - 2)) {
+            this.currentTransform += setWidth;
+        }
+        while (this.currentTransform >= 0) {
+            this.currentTransform -= setWidth;
+        }
+
+        this.updateTransform();
     }
 
     setSpeed(durationSeconds) {
