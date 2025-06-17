@@ -13,7 +13,7 @@ start the verification of a specific quality specification.
 
 .. code-block:: python
 
-    service = prosuite.verification.service(host_name='localhost', port_nr=5151)
+    service = prosuite.verification.Service(host_name='localhost', port_nr=5151)
     service.verify(specification=my_specification)
 
 
@@ -169,7 +169,7 @@ Verification using XML Specification
 
     import prosuite
 
-    service = prosuite.verification.service(host_name='arcgis_server', port_nr=5151)
+    service = prosuite.verification.Service(host_name='arcgis_server', port_nr=5151)
 
     xml_file = "\\share\QA\specifications\road_specification.qa.xml"
     sde_file = "\\share\connection_files\production_QA_version.sde"
@@ -314,7 +314,7 @@ credentials on a non-windows platform, see `the gRPC Python docs <https://grpc.g
     ssl_credentials = prosuite.utils.get_ssl_channel_credentials()
 
     # if channel_credentials are passed to the Verification constructor, a secure channel will be established.
-    service = prosuite.verification.service(host_name='localhost', port_nr=5151, channel_credentials=ssl_credentials)
+    service = prosuite.verification.Service(host_name='localhost', port_nr=5151, channel_credentials=ssl_credentials)
 
 
 Define a WKB perimeter
@@ -360,7 +360,7 @@ Optionally, change advanced verification parameters, such as the Verification ti
     import prosuite
 
     xml_file = 'C:/temp/road_specification.qa.xml'
-    service = prosuite.verification.service(host_name='localhost', port_nr=5151)
+    service = prosuite.verification.Service(host_name='localhost', port_nr=5151)
     
     xml_spec = prosuite.XmlSpecification(
         specification_file=xml_file, specification_name="Produktionsunterstuetzung",
@@ -402,7 +402,7 @@ In this example, an XML specification is used.
     # Wait for the process to start, initialize the ArcGIS license and the communication channl
     time.sleep(10)
 
-    service = prosuite.verification.service(host_name='LOCALHOST', port_nr=5151)
+    service = prosuite.verification.Service(host_name='LOCALHOST', port_nr=5151)
 
     xml_file = "C:/Data/specifications/road_specification.qa.xml"
     workspace = "C:/Data/TopographicData.gdb"
@@ -732,6 +732,56 @@ Use case: Run a DDX-based quality verification, but only on features that match 
 - The `TrMakeTable` transformer filters records using a custom SQL query before the QA condition executes.
 - The DDX specification is reused as-is, no modification in the Data Dictionary is required.
 - Works with PostgreSQL/PostGIS views or other SQL-based sources supported by the QA microservice.
+
+**Export transformed datasets using `QaExportTables`**
+
+**Use case:** After applying SQL-based transformers like `TrMakeTable`, you may want to inspect the intermediate results in a file geodatabase. This is helpful for understanding which features are being passed into QA checks.
+
+.. code-block:: python
+   :linenos:
+
+   import prosuite
+   import os
+
+   service = prosuite.Service(host_name='localhost', port_nr=5151)
+
+   # Load the model and base dataset
+   model = prosuite.Model("MyModel", r"C:\\Data\\MyDatabase.gdb")
+   roads = prosuite.Dataset("v_roads", model)
+
+   # Apply an SQL filter via TrMakeTable
+   sql = """
+    SELECT object_id, change_column, type_column, geom
+    FROM schema_name.source_view
+    WHERE object_id NOT IN (
+        SELECT other.object_id
+        FROM schema_name.reference_table other
+        WHERE other.object_id = schema_name.source_view.object_id
+        AND other.status_column = 'some_terminated_status'
+    )
+    AND (
+        change_column = 'some_terminated_status' OR change_column = 'active_status'
+    )
+    """
+   filtered_roads = prosuite.Transformers.tr_make_table_1(roads, sql, object_id_field="object_id")
+
+   # Define a basic QA condition
+   condition = prosuite.Conditions.qa_min_length_0(filtered_roads, limit=10.0, is3_d=False)
+
+   # Create specification and add the condition
+   spec = prosuite.Specification(name="Check Active Roads")
+   spec.add_condition(condition)
+
+   # Export transformed dataset to GDB for inspection
+   export_gdb = r"C:\\temp\\qa_export\\transformed_data.gdb"
+   spec.add_condition(
+       prosuite.Conditions.qa_export_tables_0([filtered_roads], export_gdb)
+   )
+
+   # Run verification
+   for response in service.verify(specification=spec, output_dir=r"C:\\temp\\qa_export"):
+       print(response.message_level)
+       print(response.message)
 
 Custom Names for Conditions and Transformers
 ============================================

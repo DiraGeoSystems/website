@@ -99,7 +99,7 @@
 more <strong>quality conditions</strong>. Each quality condition represents a test algorithm configured for one or more specific datasets.</p>
 <p>In order to execute a verification the <strong>prosuite.verification.service</strong> class is used to create the communication channel to the server and to
 start the verification of a specific quality specification.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">service</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">verification</span><span class="o">.</span><span class="n">service</span><span class="p">(</span><span class="n">host_name</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">port_nr</span><span class="o">=</span><span class="mi">5151</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">service</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">verification</span><span class="o">.</span><span class="n">Service</span><span class="p">(</span><span class="n">host_name</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">port_nr</span><span class="o">=</span><span class="mi">5151</span><span class="p">)</span>
 <span class="n">service</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">specification</span><span class="o">=</span><span class="n">my_specification</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -230,7 +230,7 @@ A sample Python script can be found in <a class="reference external" href="https
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">prosuite</span>
 <span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="n">service</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">verification</span><span class="o">.</span><span class="n">service</span><span class="p">(</span><span class="n">host_name</span><span class="o">=</span><span class="s1">&#39;arcgis_server&#39;</span><span class="p">,</span> <span class="n">port_nr</span><span class="o">=</span><span class="mi">5151</span><span class="p">)</span>
+<span class="linenos"> 3</span><span class="n">service</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">verification</span><span class="o">.</span><span class="n">Service</span><span class="p">(</span><span class="n">host_name</span><span class="o">=</span><span class="s1">&#39;arcgis_server&#39;</span><span class="p">,</span> <span class="n">port_nr</span><span class="o">=</span><span class="mi">5151</span><span class="p">)</span>
 <span class="linenos"> 4</span>
 <span class="linenos"> 5</span><span class="n">xml_file</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">share\QA\specifications</span><span class="se">\r</span><span class="s2">oad_specification.qa.xml&quot;</span>
 <span class="linenos"> 6</span><span class="n">sde_file</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">share\connection_files\production_QA_version.sde&quot;</span>
@@ -360,7 +360,7 @@ credentials on a non-windows platform, see <a class="reference external" href="h
 <span class="linenos">2</span><span class="n">ssl_credentials</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_ssl_channel_credentials</span><span class="p">()</span>
 <span class="linenos">3</span>
 <span class="linenos">4</span><span class="c1"># if channel_credentials are passed to the Verification constructor, a secure channel will be established.</span>
-<span class="linenos">5</span><span class="n">service</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">verification</span><span class="o">.</span><span class="n">service</span><span class="p">(</span><span class="n">host_name</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">port_nr</span><span class="o">=</span><span class="mi">5151</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="o">=</span><span class="n">ssl_credentials</span><span class="p">)</span>
+<span class="linenos">5</span><span class="n">service</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">verification</span><span class="o">.</span><span class="n">Service</span><span class="p">(</span><span class="n">host_name</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">port_nr</span><span class="o">=</span><span class="mi">5151</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="o">=</span><span class="n">ssl_credentials</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -399,7 +399,7 @@ iterable because the verification service returns a reponse stream. Hence the pr
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">prosuite</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="n">xml_file</span> <span class="o">=</span> <span class="s1">&#39;C:/temp/road_specification.qa.xml&#39;</span>
-<span class="linenos"> 4</span><span class="n">service</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">verification</span><span class="o">.</span><span class="n">service</span><span class="p">(</span><span class="n">host_name</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">port_nr</span><span class="o">=</span><span class="mi">5151</span><span class="p">)</span>
+<span class="linenos"> 4</span><span class="n">service</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">verification</span><span class="o">.</span><span class="n">Service</span><span class="p">(</span><span class="n">host_name</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">port_nr</span><span class="o">=</span><span class="mi">5151</span><span class="p">)</span>
 <span class="linenos"> 5</span>
 <span class="linenos"> 6</span><span class="n">xml_spec</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">XmlSpecification</span><span class="p">(</span>
 <span class="linenos"> 7</span>    <span class="n">specification_file</span><span class="o">=</span><span class="n">xml_file</span><span class="p">,</span> <span class="n">specification_name</span><span class="o">=</span><span class="s2">&quot;Produktionsunterstuetzung&quot;</span><span class="p">,</span>
@@ -438,7 +438,7 @@ In this example, an XML specification is used.</p>
 <span class="linenos">14</span><span class="c1"># Wait for the process to start, initialize the ArcGIS license and the communication channl</span>
 <span class="linenos">15</span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 <span class="linenos">16</span>
-<span class="linenos">17</span><span class="n">service</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">verification</span><span class="o">.</span><span class="n">service</span><span class="p">(</span><span class="n">host_name</span><span class="o">=</span><span class="s1">&#39;LOCALHOST&#39;</span><span class="p">,</span> <span class="n">port_nr</span><span class="o">=</span><span class="mi">5151</span><span class="p">)</span>
+<span class="linenos">17</span><span class="n">service</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">verification</span><span class="o">.</span><span class="n">Service</span><span class="p">(</span><span class="n">host_name</span><span class="o">=</span><span class="s1">&#39;LOCALHOST&#39;</span><span class="p">,</span> <span class="n">port_nr</span><span class="o">=</span><span class="mi">5151</span><span class="p">)</span>
 <span class="linenos">18</span>
 <span class="linenos">19</span><span class="n">xml_file</span> <span class="o">=</span> <span class="s2">&quot;C:/Data/specifications/road_specification.qa.xml&quot;</span>
 <span class="linenos">20</span><span class="n">workspace</span> <span class="o">=</span> <span class="s2">&quot;C:/Data/TopographicData.gdb&quot;</span>
@@ -733,6 +733,52 @@ configured input dataset can be adapted to using a dynamic query before the QA t
 <li><p>The DDX specification is reused as-is, no modification in the Data Dictionary is required.</p></li>
 <li><p>Works with PostgreSQL/PostGIS views or other SQL-based sources supported by the QA microservice.</p></li>
 </ul>
+<p><strong>Export transformed datasets using `QaExportTables`</strong></p>
+<p><strong>Use case:</strong> After applying SQL-based transformers like <cite>TrMakeTable</cite>, you may want to inspect the intermediate results in a file geodatabase. This is helpful for understanding which features are being passed into QA checks.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">prosuite</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="n">service</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">Service</span><span class="p">(</span><span class="n">host_name</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">port_nr</span><span class="o">=</span><span class="mi">5151</span><span class="p">)</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1"># Load the model and base dataset</span>
+<span class="linenos"> 7</span><span class="n">model</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;MyModel&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;C:</span><span class="se">\\</span><span class="s2">Data</span><span class="se">\\</span><span class="s2">MyDatabase.gdb&quot;</span><span class="p">)</span>
+<span class="linenos"> 8</span><span class="n">roads</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s2">&quot;v_roads&quot;</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="c1"># Apply an SQL filter via TrMakeTable</span>
+<span class="linenos">11</span><span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">12</span><span class="s2"> SELECT object_id, change_column, type_column, geom</span>
+<span class="linenos">13</span><span class="s2"> FROM schema_name.source_view</span>
+<span class="linenos">14</span><span class="s2"> WHERE object_id NOT IN (</span>
+<span class="linenos">15</span><span class="s2">     SELECT other.object_id</span>
+<span class="linenos">16</span><span class="s2">     FROM schema_name.reference_table other</span>
+<span class="linenos">17</span><span class="s2">     WHERE other.object_id = schema_name.source_view.object_id</span>
+<span class="linenos">18</span><span class="s2">     AND other.status_column = &#39;some_terminated_status&#39;</span>
+<span class="linenos">19</span><span class="s2"> )</span>
+<span class="linenos">20</span><span class="s2"> AND (</span>
+<span class="linenos">21</span><span class="s2">     change_column = &#39;some_terminated_status&#39; OR change_column = &#39;active_status&#39;</span>
+<span class="linenos">22</span><span class="s2"> )</span>
+<span class="linenos">23</span><span class="s2"> &quot;&quot;&quot;</span>
+<span class="linenos">24</span><span class="n">filtered_roads</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">Transformers</span><span class="o">.</span><span class="n">tr_make_table_1</span><span class="p">(</span><span class="n">roads</span><span class="p">,</span> <span class="n">sql</span><span class="p">,</span> <span class="n">object_id_field</span><span class="o">=</span><span class="s2">&quot;object_id&quot;</span><span class="p">)</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="c1"># Define a basic QA condition</span>
+<span class="linenos">27</span><span class="n">condition</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">Conditions</span><span class="o">.</span><span class="n">qa_min_length_0</span><span class="p">(</span><span class="n">filtered_roads</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">is3_d</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span><span class="c1"># Create specification and add the condition</span>
+<span class="linenos">30</span><span class="n">spec</span> <span class="o">=</span> <span class="n">prosuite</span><span class="o">.</span><span class="n">Specification</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Check Active Roads&quot;</span><span class="p">)</span>
+<span class="linenos">31</span><span class="n">spec</span><span class="o">.</span><span class="n">add_condition</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="c1"># Export transformed dataset to GDB for inspection</span>
+<span class="linenos">34</span><span class="n">export_gdb</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:</span><span class="se">\\</span><span class="s2">temp</span><span class="se">\\</span><span class="s2">qa_export</span><span class="se">\\</span><span class="s2">transformed_data.gdb&quot;</span>
+<span class="linenos">35</span><span class="n">spec</span><span class="o">.</span><span class="n">add_condition</span><span class="p">(</span>
+<span class="linenos">36</span>    <span class="n">prosuite</span><span class="o">.</span><span class="n">Conditions</span><span class="o">.</span><span class="n">qa_export_tables_0</span><span class="p">([</span><span class="n">filtered_roads</span><span class="p">],</span> <span class="n">export_gdb</span><span class="p">)</span>
+<span class="linenos">37</span><span class="p">)</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span><span class="c1"># Run verification</span>
+<span class="linenos">40</span><span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">specification</span><span class="o">=</span><span class="n">spec</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;C:</span><span class="se">\\</span><span class="s2">temp</span><span class="se">\\</span><span class="s2">qa_export&quot;</span><span class="p">):</span>
+<span class="linenos">41</span>    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">message_level</span><span class="p">)</span>
+<span class="linenos">42</span>    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="custom-names-for-conditions-and-transformers">
 <h2>Custom Names for Conditions and Transformers<a class="headerlink" href="#custom-names-for-conditions-and-transformers" title="Link to this heading"></a></h2>
