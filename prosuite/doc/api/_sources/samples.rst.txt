@@ -350,6 +350,47 @@ iterable because the verification service returns a reponse stream. Hence the pr
         print(verification_response.message)
 
 
+Accessing Verified Specification Metadata
+===========================================
+
+Since version **1.5.1**, the final VerificationResponse returned by service.verify(...) includes a
+VerifiedSpecification object that provides structured metadata about the executed verification.
+
+This allows programmatic access to:
+
+- The specification metadata (ID, name, context, user name)
+- The list of verified quality conditions, each with:
+  
+  - condition_id: (optional) the ID of the verified condition
+  - name: the condition name
+  - error_count: number of detected issues
+
+This is useful for post-processing, logging, or automated reporting.
+
+Example usage
+-------------
+
+The following helper function can be used to print a summary of the verified specification and its conditions:
+
+.. code-block:: python
+
+   def print_verified_specification(response):
+       spec = response.verified_specification
+       if spec is None:
+           print("No VerifiedSpecification returned.")
+           return
+
+       print("--- Verified Specification ---")
+       print(f"  ID: {spec.specification_id}")
+       print(f"  Name: {spec.specification_name}")
+       print(f"  Context: {spec.context_name}")
+       print(f"  User: {spec.user_name}")
+       print(f"  Verified conditions: {len(spec.verified_conditions)}")
+
+       for cond in spec.verified_conditions:
+           print(f"    ID={cond.condition_id}, Name='{cond.name}', Errors={cond.error_count}")
+
+
 Advanced Parameters
 ===================
 Optionally, change advanced verification parameters, such as the Verification tile_size (the default is 5000m)

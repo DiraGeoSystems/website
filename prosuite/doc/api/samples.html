@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Samples &mdash; ProSuite 1.4.2 documentation</title>
+  <title>Samples &mdash; ProSuite 1.5.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=02f2166e"></script>
+      <script src="_static/documentation_options.js?v=44dfd65d"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -55,6 +55,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#verification-on-secure-channel">Verification on Secure Channel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#define-a-wkb-perimeter">Define a WKB perimeter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#acessing-a-verification-response">Acessing a verification response</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#accessing-verified-specification-metadata">Accessing Verified Specification Metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-usage">Example usage</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#advanced-parameters">Advanced Parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#start-and-stop-the-local-service-process">Start and stop the local service process</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#issue-filters">Issue Filters</a></li>
@@ -263,7 +267,7 @@ Data source replacements are provided in the format of string pairs [&lt;workspa
 <li><p>If no data source replacement is provided, a connectionString must be defined for the respective workspace in the XML. This is achieved by exporting the full workspace information when exporting the XML specification in the data dictionary editor by checking the Option ‘Export workspace connection information’.</p></li>
 <li><p>If one or more datasource replacements are provided they will be used to open the referenced datasets in the XML by using the specified geodatabase for the respective workspace id.</p></li>
 </ul>
-<p>For more details see the documentation of the verification service: <a class="reference internal" href="prosuite.html#prosuite.verification.Service" title="prosuite.verification.Service"><code class="xref py py-class docutils literal notranslate"><span class="pre">prosuite.verification.Service</span></code></a>.</p>
+<p>For more details see the documentation of the verification service: <code class="xref py py-class docutils literal notranslate"><span class="pre">prosuite.verification.Service</span></code>.</p>
 </section>
 <section id="get-specification-names-from-xmlspecification">
 <h2>Get specification names from XmlSpecification<a class="headerlink" href="#get-specification-names-from-xmlspecification" title="Link to this heading"></a></h2>
@@ -392,6 +396,44 @@ iterable because the verification service returns a reponse stream. Hence the pr
 <span class="linenos">4</span>    <span class="nb">print</span><span class="p">(</span><span class="n">verification_response</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="accessing-verified-specification-metadata">
+<h2>Accessing Verified Specification Metadata<a class="headerlink" href="#accessing-verified-specification-metadata" title="Link to this heading"></a></h2>
+<p>Since version <strong>1.5.1</strong>, the final VerificationResponse returned by service.verify(…) includes a
+VerifiedSpecification object that provides structured metadata about the executed verification.</p>
+<p>This allows programmatic access to:</p>
+<ul class="simple">
+<li><p>The specification metadata (ID, name, context, user name)</p></li>
+<li><p>The list of verified quality conditions, each with:</p>
+<ul>
+<li><p>condition_id: (optional) the ID of the verified condition</p></li>
+<li><p>name: the condition name</p></li>
+<li><p>error_count: number of detected issues</p></li>
+</ul>
+</li>
+</ul>
+<p>This is useful for post-processing, logging, or automated reporting.</p>
+<section id="example-usage">
+<h3>Example usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h3>
+<p>The following helper function can be used to print a summary of the verified specification and its conditions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">print_verified_specification</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">verified_specification</span>
+    <span class="k">if</span> <span class="n">spec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No VerifiedSpecification returned.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Verified Specification ---&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ID: </span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">specification_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Name: </span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">specification_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Context: </span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">context_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  User: </span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Verified conditions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">verified_conditions</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">cond</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">verified_conditions</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    ID=</span><span class="si">{</span><span class="n">cond</span><span class="o">.</span><span class="n">condition_id</span><span class="si">}</span><span class="s2">, Name=&#39;</span><span class="si">{</span><span class="n">cond</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;, Errors=</span><span class="si">{</span><span class="n">cond</span><span class="o">.</span><span class="n">error_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="advanced-parameters">
 <h2>Advanced Parameters<a class="headerlink" href="#advanced-parameters" title="Link to this heading"></a></h2>
