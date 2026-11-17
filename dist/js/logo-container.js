@@ -381,6 +381,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.bottomLogoScroller.destroy();
     }
 
-    window.topLogoScroller = new InfiniteScroller('logoTopContainer', 'logoTopWrapper', 'left', 40);
-    window.bottomLogoScroller = new InfiniteScroller('logoBottomContainer', 'logoBottomWrapper', 'right', 40);
+    window.topLogoScroller = new InfiniteScroller('logoTopContainer', 'logoTopWrapper', 'left', 50);
+    window.bottomLogoScroller = new InfiniteScroller('logoBottomContainer', 'logoBottomWrapper', 'right', 50);
 });
