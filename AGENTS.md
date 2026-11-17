@@ -44,8 +44,12 @@ the Jekyll build (`_config.yml`), so it is never published.
   `<picture>` element at `max-width: 768px`. That breakpoint must match the one
   in `custom.scss`. It is exported at 80px tall.
 - The carousel (`dist/js/logo-container.js`) clones the logo elements and
-  measures their width once, after the images have loaded. It does not
-  re-measure on window resize.
+  measures their width once, after the images have loaded. It measures the
+  original elements, not the clones: on a cache-bypassing reload Firefox
+  re-downloads the clones, so they have no width yet. It does not re-measure on
+  window resize, so a logo shown per language (`.lang-de`/`.lang-en`) must have
+  the same width in both languages. Scrolling starts only once the carousel is
+  in view, so visitors see the first logo first.
 
 ## Git workflow
 
